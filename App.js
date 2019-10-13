@@ -41,10 +41,7 @@ export default class App extends React.Component {
 
     await Promise.all(cacheImages);
 
-    //setTimeout can be removed, Kept it for testing Purpose.
-    setTimeout(() => {
-      this.setState({ isAppReady: true });
-    }, 2000);
+    this.setState({ isAppReady: true });
   };
 
   render() {

@@ -7,13 +7,16 @@ import {
   StyleSheet,
   View,
   Image,
-  ScrollView
+  ScrollView,
+  Platform
 } from "react-native";
 
 import { Button, Block, Input, Text } from "../components";
 import { theme } from "./../theme/Index";
 import * as firebase from "firebase";
+import "firebase/firestore";
 //import { ScrollView } from "react-native-gesture-handler";
+//export const firestore = firebase.firestore();
 
 export default class Signup extends Component {
   state = {
@@ -22,78 +25,89 @@ export default class Signup extends Component {
     password: null,
     firstName: null,
     errors: [],
-    loading: false
+    isLoading: false
   };
 
   handleSignUp() {
     const { navigation } = this.props;
-    const { email, firstName, lastName, password } = this.state;
+    const { email, firstName, lastName, password, isLoading } = this.state;
     const errors = [];
 
     Keyboard.dismiss();
-    this.setState({ loading: true });
+    this.setState({ isLoading: true });
 
-    setTimeout(() => {
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, password)
-        .then(() => {
-          console.log("Authentication success");
-          let userUniqueId = firebase.auth().currentUser.uid;
-          this.CreateUserTableInDB(firstName, email, password, userUniqueId);
-          Alert.alert(
-            "Success!",
-            "Your account has been created",
-            [
-              {
-                text: "Continue",
-                onPress: () => {
-                  navigation.navigate("SignIn");
-                }
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(() => {
+        this.setState({ isLoading: false });
+        console.log("Authentication success");
+        let userUniqueId = firebase.auth().currentUser.uid;
+        this.CreateUserTableInDB(
+          firstName,
+          lastName,
+          email,
+          password,
+          userUniqueId
+        );
+        Alert.alert(
+          "Success!",
+          "Your account has been created",
+          [
+            {
+              text: "Continue",
+              onPress: () => {
+                navigation.navigate("SignedIn");
               }
-            ],
-            { cancelable: false }
-          );
-        })
-        .catch(error => {
-          this.setState({ isLoading: false });
-          Alert.alert(error.message);
-        });
-    }, 300);
-
-    this.setState({ loading: false });
+            }
+          ],
+          { cancelable: false }
+        );
+      })
+      .catch(error => {
+        this.setState({ isLoading: false });
+        Alert.alert(error.message);
+      });
   }
 
-  CreateUserTableInDB = (username, email, password, userUniqueId) => {
-    setTimeout(() => {
-      firebase
-        .database()
-        .ref("Users/" + userUniqueId)
-        .set({
-          ID: userUniqueId,
-          USERNAME: username,
-          EMAIL: email,
-          PASSWORD: password
-        })
-        .then(() => {
-          console.log("User attributes pushed");
-        })
-        .catch(error => {
-          console.log("User attributes failed to pushed");
-          Alert.alert(error.message);
-          this.setState({ isLoading: false });
-        });
-    }, 200);
+  CreateUserTableInDB = (
+    firstname,
+    lastname,
+    email,
+    password,
+    userUniqueId
+  ) => {
+    firebase
+      .firestore()
+      .collection("Users")
+      .doc(userUniqueId)
+      .set({
+        id: userUniqueId,
+        firstName: firstname,
+        lastName: lastname,
+        email: email
+      })
+      .then(() => {
+        console.log("User attributes pushed");
+      })
+      .catch(error => {
+        console.log("User attributes failed to pushed");
+        Alert.alert(error.message);
+        // this.setState({ isLoading: false });
+      });
   };
 
   render() {
     const { navigation } = this.props;
-    const { loading, errors } = this.state;
+    const { isLoading, errors } = this.state;
     const hasErrors = key => (errors.includes(key) ? styles.hasErrors : null);
 
     return (
-      <ScrollView>
-        <KeyboardAvoidingView style={styles.signup} behavior="padding">
+      <KeyboardAvoidingView
+        style={styles.signup}
+        behavior={Platform.OS === "ios" ? "padding" : null}
+      >
+        <ScrollView keyboardShouldPersistTaps="handled">
           <Block padding={[theme.sizes.base * 4, theme.sizes.base * 2]}>
             <View style={styles.container}>
               <Image
@@ -136,7 +150,7 @@ export default class Signup extends Component {
                 onChangeText={text => this.setState({ password: text })}
               />
               <Button gradient onPress={() => this.handleSignUp()}>
-                {loading ? (
+                {isLoading ? (
                   <ActivityIndicator size="small" color="white" />
                 ) : (
                   <Text bold white center>
@@ -156,8 +170,8 @@ export default class Signup extends Component {
               </Button>
             </Block>
           </Block>
-        </KeyboardAvoidingView>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     );
   }
 }

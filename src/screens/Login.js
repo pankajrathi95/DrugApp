@@ -19,34 +19,36 @@ export default class Login extends React.Component {
     email: "",
     password: "",
     errors: [],
-    loading: false
+    isLoading: false
   };
 
   handleLogin() {
-    const { email, password } = this.state;
+    const { email, password, isLoading } = this.state;
 
     Keyboard.dismiss();
-    this.setState({ loading: true });
+    this.setState({ isLoading: true });
 
     // check with backend API or with some static data
-    setTimeout(() => {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(() => {
-          console.log("login success");
-          this.props.navigation.navigate("SignedIn");
-        })
-        .catch(error => {
-          console.log("login failed");
-          Alert.alert(error.message);
-        });
-    }, 200);
-    this.setState({ loading: false });
+
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(() => {
+        this.setState({ isLoading: false });
+        console.log("login success");
+        this.props.navigation.navigate("SignedIn");
+      })
+      .catch(error => {
+        this.setState({ isLoading: false });
+        console.log("login failed");
+        Alert.alert(error.message);
+      });
+
+    // this.setState({ loading: false });
   }
   render() {
     const { navigation } = this.props;
-    const { loading, errors } = this.state;
+    const { isLoading, errors } = this.state;
     const hasErrors = key => (errors.includes(key) ? styles.hasErrors : null);
     return (
       <ScrollView>
@@ -79,7 +81,7 @@ export default class Login extends React.Component {
                 onChangeText={text => this.setState({ password: text })}
               />
               <Button gradient onPress={() => this.handleLogin()}>
-                {loading ? (
+                {isLoading ? (
                   <ActivityIndicator size="small" color="white" />
                 ) : (
                   <Text bold white center>

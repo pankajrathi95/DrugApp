@@ -1,7 +1,10 @@
-import React from "react";
+import React, { Component } from "react";
 import { StyleSheet, View, Text } from "react-native";
 
-class Home extends React.Component {
+class Home extends Component {
+  static navigationOptions = {
+    title: "Home   "
+  };
   render() {
     return (
       <View style={styles.container}>
