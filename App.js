@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Image } from "react-native";
+import { Provider as PaperProvider } from "react-native-paper";
 import { AppLoading, SplashScreen } from "expo";
 import { Asset } from "expo-asset";
 
@@ -45,7 +46,7 @@ export default class App extends React.Component {
   };
 
   render() {
-    const Layout = createRootNavigator(false);
+    const Layout = createRootNavigator(true);
     if (!this.state.isSplashReady) {
       return (
         <AppLoading
@@ -66,6 +67,10 @@ export default class App extends React.Component {
         </View>
       );
     }
-    return <Layout />;
+    return (
+      <PaperProvider>
+        <Layout />
+      </PaperProvider>
+    );
   }
 }

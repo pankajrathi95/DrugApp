@@ -12,10 +12,11 @@ const colors = {
   primary: "#904e95",
   secondary: "#e96443",
   tertiary: "#FFE358",
-  black: "#323643",
+  black: "#000000", //"#323643",
   white: "#FFFFFF",
   gray: "#9DA3B4",
-  gray2: "#C5CCD6"
+  gray2: "#C5CCD6",
+  fadewhite: "#cccccc"
 };
 
 const DynamicColor = {
