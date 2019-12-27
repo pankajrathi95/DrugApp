@@ -33,7 +33,7 @@ class Profile extends Component {
     title: "Profile    "
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.getDataFromFirebase();
   }
 

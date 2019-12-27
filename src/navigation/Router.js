@@ -18,6 +18,7 @@ import Profile from "./../screens/Profile";
 import Drug from "./../screens/Drug";
 import Search from "./../screens/Search";
 import Disease from "../screens/Disease";
+import DrugDetail from "./../components/Drug";
 
 const HomeStackNavigator = createStackNavigator(
   {
@@ -67,7 +68,8 @@ const ProfileStackNavigator = createStackNavigator(
 
 const DrugStackNavigator = createStackNavigator(
   {
-    DrugNavigator: Drug
+    DrugNavigator: Drug,
+    DrugDetailNavigator: DrugDetail
   },
   {
     defaultNavigationOptions: ({ navigation }) => {
