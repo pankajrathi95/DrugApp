@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Linking } from "react-native";
 import { Divider, Card, Title } from "react-native-paper";
+import Route from "react-native-elements";
 import { theme } from "../theme/Index";
 
 import * as firebase from "firebase";
@@ -18,6 +19,14 @@ class Drug extends Component {
     return (
       <View style={styles.container}>
         <Text>sdasda</Text>
+        <Text
+          title="click me"
+          onPress={() => {
+            Linking.openURL("https://google.com");
+          }}
+        >
+          asas
+        </Text>
       </View>
     );
   }
