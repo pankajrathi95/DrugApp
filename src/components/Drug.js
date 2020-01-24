@@ -19,6 +19,7 @@ class Drug extends Component {
     return (
       <View style={styles.container}>
         <Text>sdasda</Text>
+        <p>asasas</p>\n<p><br></p>\n<p>s</p>\n<p><br></p>\n<p><br></p>\n<p><br></p>\n<ul>\n  <li>asdasdas</li>\n  <li>sadasda</li>\n  <li>sad</li>\n  <li>ad</li>\n  <li>asd</li>\n  <li>sa</li>\n  <li>da</li>\n  <li>d</li>\n  <li>asd</li>\n  <li>sa</li>\n  <li>d</li>\n  <li>sad</li>\n  <li>a</li>\n</ul>
         <Text
           title="click me"
           onPress={() => {
